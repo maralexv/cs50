@@ -1,3 +1,4 @@
+// Asking for person's name and greeting the person, using cs50.h too
 #include<stdio.h>
 #include<cs50.h>
 
