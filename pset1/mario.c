@@ -23,9 +23,9 @@ int ask(void)
     int num;
     do
     {
-        num = get_int("How tall do you want the pyramids to be? Please indicate the number of bricks: ");
+        num = get_int("Height: ");
     }
-    while (num < 1 && !isdigit(num));
+    while (num < 1 || num > 8);
 
     return num;
 }
