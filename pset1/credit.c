@@ -4,29 +4,84 @@
 #include<cs50.h>
 
 // Initialise funcs, used later in the code
-int get_card_number(void);
+long get_card_number(void);
 int card_num_length(long cnum);
 int card_type(long card_number, int num_length);
-
+string validation(long card_n, int digits);
 
 // Main block where the program starts
 int main(void)
 {
-    long card_number = get_card_number();
-    int num_length = card_num_length(card_number);
-    int first_digts = card_type(card_number, num_length);
+    long card_numb = get_card_number();
+    int num_length = card_num_length(card_numb);
+    int digits = card_type(card_numb, num_length);
+
+    // Validation using Luhn's algorithm
+    int acc1 = 0;
+    long cnr = card_numb;
+    int r;
+    
+    while (cnr > 0)
+    {
+        cnr /= 10;
+        r = cnr % 10;
+        if ((r * 2)>9)
+        {
+            acc1 += ((r*2)%10) + ((r*2)/10);
+        }
+        else
+        {
+            acc1 += r*2;
+        }
+        cnr /= 10;
+    }
+
+    cnr = card_numb;
+    int acc2 = acc1;
+    while (cnr > 0)
+    {
+        r = cnr % 10;
+        acc2 += r;
+        cnr /= 100;
+    }
+
+    string val;
+    int v = digits/10;
+    if ((acc2 % 10) != 0 || num_length < 13)
+    {
+        val = "INVALID\n";
+    }
+    else if (digits == 34 || digits == 37)
+    {
+        val = "AMEX\n";
+    }
+    else if (digits == 51 || digits == 52 || digits == 53 || digits == 54 || digits == 55 || digits == 22)
+    {
+        val = "MASTERCARD\n";
+    }
+    else if (v == 4)
+    {
+        val = "VISA\n";
+    }
+    else
+    {
+        val = "INVALID\n";
+    }
+    
+    printf("%s", val);
+    return 0;
 }
 
 // User inputs the credit/debit card number
-int get_card_number(void)
+long get_card_number(void)
 {
     long card_number;
     do
     {
-        card_number = get_long("Your card number: ");
+        card_number = get_long("Number: ");
     }
     while (card_number <=0);
-    printf("card number: %li\n", card_number);
+
     return card_number;
 }
 
@@ -39,17 +94,14 @@ int card_num_length(long cnum)
         cnum /= 10;
         num_length++;
     }
-    printf("number length: %d\n", num_length);
+
     return num_length;
 }
 
 // Determin type of the card
-int card_type(long card_number, int num_length)
+int card_type(long card_num, int num_len)
 {
-    int initial_digits = card_number / pow(10, (num_length - 2));
-    printf("first 2 digits: %d\n", initial_digits);
+    int two_digits = card_num / pow(10, (num_len - 2));
 
-    return initial_digits;
+    return two_digits;
 }
-
-// Validity check
