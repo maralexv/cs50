@@ -1,9 +1,9 @@
 // Encrypts messages using Caesar’s cipher
-#include<stdio.h>
-#include<cs50.h>
-#include<ctype.h>
-#include<string.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <cs50.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 
 string cipher(string txt, int k, int pl);
 
@@ -16,7 +16,6 @@ int main(int argc, string argv[])
         return 1;
     }
     int key = atol(argv[1]);
-    printf("%d\n", key);
     // Get user input
     string plaintext = get_string("plaintext: ");
     int plaintext_len = strlen(plaintext);
@@ -26,20 +25,20 @@ int main(int argc, string argv[])
     printf("ciphertext: %s\n", ciphertext);
     return 0;
 }
+
 // Encript string passed to the function
 string cipher(string txt, int k, int pl)
 {
-    string ctext = txt;
     for (int i = 0; i < pl; i++)
     {
-        if (isalpha(txt[i]))
+        if (isalpha(txt[i]) && isupper(txt[i]))
         {
-            ctext[i] = (txt[i] + k) % 26;
+            txt[i] = (txt[i] - 65 + k) % 26 + 65;
         }
-        else
+        else if (isalpha(txt[i]) && islower(txt[i]))
         {
-            ctext[i] = txt[i];
+            txt[i] = (txt[i] - 97 + k) % 26 + 97;
         }
     }
-    return ctext;
+    return txt;
 }
