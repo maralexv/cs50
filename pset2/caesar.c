@@ -10,13 +10,21 @@ string cipher(string txt, int k, int pl);
 int main(int argc, string argv[])
 {
     // Check whether user provided encription key
-    if (argc < 2)
+    if (argc < 2 || argc > 2)
     {
-        printf("./caesar key\n");
+        printf("Usage: ./caesar key\n");
         return 1;
     }
+    for (int i = 0, n = strlen(argv[1]); i < n; i++)
+    {
+        if (isdigit(argv[1][i]) == 0)
+        {
+            printf("Usage: ./caesar key\n");
+            return 1;
+        }
+    }
     int key = atol(argv[1]);
-    // Get user input
+    // Get user text input
     string plaintext = get_string("plaintext: ");
     int plaintext_len = strlen(plaintext);
     // Ecript user input
@@ -26,7 +34,7 @@ int main(int argc, string argv[])
     return 0;
 }
 
-// Encript string passed to the function
+// Encript string passed to the function (shift every alphabetical symbol by key)
 string cipher(string txt, int k, int pl)
 {
     for (int i = 0; i < pl; i++)
