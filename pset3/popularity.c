@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// Max number of candidates
+// Set max number of candidates
 #define MAX 9
 
 // Candidates have name and vote count
@@ -11,12 +11,10 @@ typedef struct
     string name;
     int votes;
 } candidate;
-
-// Array of candidates
-candidate candidates[MAX];
-
+// Define array of candidates
+candidate CANDIDATES[MAX];
 // Number of candidates
-int candidate_count;
+int CANDIDATE_COUNT;
 
 // Function prototypes
 bool vote(string name);
@@ -30,18 +28,17 @@ int main(int argc, string argv[])
         printf("Usage: plurality [candidate ...]\n");
         return 1;
     }
-
     // Populate array of candidates
-    candidate_count = argc - 1;
-    if (candidate_count > MAX)
+    CANDIDATE_COUNT = argc - 1;
+    if (CANDIDATE_COUNT > MAX)
     {
         printf("Maximum number of candidates is %i\n", MAX);
         return 2;
     }
-    for (int i = 0; i < candidate_count; i++)
+    for (int i = 0; i < CANDIDATE_COUNT; i++)
     {
-        candidates[i].name = argv[i + 1];
-        candidates[i].votes = 0;
+        CANDIDATES[i].name = argv[i + 1];
+        CANDIDATES[i].votes = 0;
     }
 
     int voter_count = get_int("Number of voters: ");
@@ -56,6 +53,7 @@ int main(int argc, string argv[])
         {
             printf("Invalid vote.\n");
         }
+    
     }
 
     // Display winner of election
@@ -65,13 +63,46 @@ int main(int argc, string argv[])
 // Update vote totals given a new vote
 bool vote(string name)
 {
-    // TODO
-    return false;
+    for (int i = 0; i < CANDIDATE_COUNT; i++)
+    {
+        if (CANDIDATES[i].name == name)
+        {
+            CANDIDATES[i].votes++;
+            return false;
+        }
+    }
+    return true;
 }
 
 // Print the winner (or winners) of the election
 void print_winner(void)
 {
-    // TODO
+    int k = 0;
+    candidate winners[] = {CANDIDATES[0].name, CANDIDATES[0].votes};
+    // Find the candidateb with highest number of votes
+    for (int i = 0; i < CANDIDATE_COUNT; i++)
+    {
+        if (CANDIDATES[i + 1].votes > CANDIDATES[i].votes)
+        {
+            winners[k].name = CANDIDATES[i + 1].name;
+            winners[k].votes = CANDIDATES[i + 1].votes;
+        }
+    }
+    // Check if ay other candidate has the same nukber of votes as the winner
+    for (int i = 0; i < CANDIDATE_COUNT; i++)
+    {
+        if (CANDIDATES[i + 1].votes == winners[k].votes)
+        {
+            k++;
+            winners[k].name = CANDIDATES[i + 1].name;
+            winners[k].votes = CANDIDATES[i+1].votes;
+        }
+    }
+    // Pront the winner (or winners)
+    int winners_count = sizeof(winners) / sizeof(winners[0]);
+    for (int i = 0; i < winners_count; i++)
+    {
+        printf("%s\n", winners[i].name);
+    }
     return;
 }
