@@ -65,44 +65,40 @@ bool vote(string name)
 {
     for (int i = 0; i < CANDIDATE_COUNT; i++)
     {
-        if (CANDIDATES[i].name == name)
+        if (strcmp(CANDIDATES[i].name, name) == 0)
         {
             CANDIDATES[i].votes++;
-            return false;
+            return true;
         }
     }
-    return true;
+    return false;
 }
 
 // Print the winner (or winners) of the election
 void print_winner(void)
 {
     int k = 0;
-    candidate winners[] = {CANDIDATES[0].name, CANDIDATES[0].votes};
-    // Find the candidateb with highest number of votes
+    // Find the highest vote
     for (int i = 0; i < CANDIDATE_COUNT; i++)
     {
-        if (CANDIDATES[i + 1].votes > CANDIDATES[i].votes)
+        if (CANDIDATES[i].votes > k)
         {
-            winners[k].name = CANDIDATES[i + 1].name;
-            winners[k].votes = CANDIDATES[i + 1].votes;
+            k = CANDIDATES[i].votes;
         }
     }
-    // Check if ay other candidate has the same nukber of votes as the winner
+    // If the highest vote = 0, no votes were casted
+    if (k == 0)
+    {
+        printf("No valid votes casted!\n");
+        return;
+    }
+    // Print all the winners
     for (int i = 0; i < CANDIDATE_COUNT; i++)
     {
-        if (CANDIDATES[i + 1].votes == winners[k].votes)
+        if (CANDIDATES[i].votes == k)
         {
-            k++;
-            winners[k].name = CANDIDATES[i + 1].name;
-            winners[k].votes = CANDIDATES[i+1].votes;
+            printf("%s\n", CANDIDATES[i].name);
         }
-    }
-    // Pront the winner (or winners)
-    int winners_count = sizeof(winners) / sizeof(winners[0]);
-    for (int i = 0; i < winners_count; i++)
-    {
-        printf("%s\n", winners[i].name);
     }
     return;
 }
