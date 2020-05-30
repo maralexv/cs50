@@ -84,11 +84,28 @@ int main(int argc, string argv[])
             }
         }
 
+        for (int i=0; i<candidate_count; i++)
+        {
+            printf("%i", ranks[i]);
+        }
+        printf("\n");
+
         record_preferences(ranks);
 
         printf("\n");
     }
 
+    for (int i = 0; i < candidate_count; i++)
+    {
+        for (int j = 0; j < candidate_count; j++)
+        {
+            printf("%i ", preferences[i][j]);
+            if (j == candidate_count - 1)
+            {
+                printf("\n");
+            }
+        }
+    }
     // add_pairs();
     // sort_pairs();
     // lock_pairs();
@@ -117,6 +134,7 @@ void record_preferences(int ranks[])
     {
         preferences[ranks[i]][ranks[i+1]]++;
     }
+    preferences[ranks[0]][ranks[candidate_count-1]]++;
     return;
 }
 
