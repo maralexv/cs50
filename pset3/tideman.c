@@ -100,7 +100,9 @@ int main(int argc, string argv[])
             }
         }
     }
-    // add_pairs();
+    printf("\n");
+
+    add_pairs();
     // sort_pairs();
     // lock_pairs();
     // print_winner();
@@ -137,7 +139,32 @@ void record_preferences(int ranks[])
 // Record pairs of candidates where one is preferred over the other
 void add_pairs(void)
 {
-    // TODO
+    for (int i = 0; i < candidate_count; i++)
+    {
+        for (int j = i + 1; j < candidate_count; j++)
+        {
+            if ((preferences[i][j] != 0 || preferences[j][i] != 0) && preferences[i][j] != preferences[j][i])
+            {
+                if (preferences[i][j] > preferences[j][i])
+                {
+                    pairs[pair_count].winner = i;
+                    pairs[pair_count].loser = j;
+                    pair_count++;
+                }
+                else
+                {
+                    pairs[pair_count].winner = j;
+                    pairs[pair_count].loser = i;
+                    pair_count++;
+                }
+            }
+        }
+    }
+
+    for (int i=0; i<pair_count; i++)
+    {
+        printf("[%i]w: %d, [%i]l: %d\n", i, pairs[i].winner, i, pairs[i].loser);
+    }
     return;
 }
 
