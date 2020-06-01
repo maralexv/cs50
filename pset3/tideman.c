@@ -89,6 +89,7 @@ int main(int argc, string argv[])
         printf("\n");
     }
 
+    // print preferences
     for (int i = 0; i < candidate_count; i++)
     {
         for (int j = 0; j < candidate_count; j++)
@@ -103,7 +104,7 @@ int main(int argc, string argv[])
     printf("\n");
 
     add_pairs();
-    // sort_pairs();
+    sort_pairs();
     // lock_pairs();
     // print_winner();
     return 0;
@@ -160,18 +161,39 @@ void add_pairs(void)
             }
         }
     }
-
+    // print pairs
+    printf("%d pairs:\n", pair_count);
     for (int i=0; i<pair_count; i++)
     {
         printf("[%i]w: %d, [%i]l: %d\n", i, pairs[i].winner, i, pairs[i].loser);
     }
+    printf("\n");
     return;
 }
 
 // Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
 {
-    // TODO
+    for (int i = 0; i < pair_count; i++)
+    {
+        for (int j = 0; j < pair_count - i - 1; j++)
+        {
+            if (preferences[pairs[j].winner][pairs[j].loser] > preferences[pairs[j+1].winner][pairs[j+1].loser])
+            {
+                // swap if greater is at the rear position
+                pair swapper = pairs[j];
+                pairs[j] = pairs[j + 1];
+                pairs[j + 1] = swapper;
+            }
+        }
+    }
+    // print pairs
+    printf("pairs sorted:\n");
+    for (int i = 0; i < pair_count; i++)
+    {
+        printf("[%i]w: %d, [%i]l: %d\n", i, pairs[i].winner, i, pairs[i].loser);
+    }
+    printf("\n");
     return;
 }
 
