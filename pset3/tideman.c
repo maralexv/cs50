@@ -105,7 +105,23 @@ int main(int argc, string argv[])
 
     add_pairs();
     sort_pairs();
-    // lock_pairs();
+    lock_pairs();
+
+    // print locked after
+    printf("locked after\n");
+    for (int i = 0; i < candidate_count; i++)
+    {
+        for (int j = 0; j < candidate_count; j++)
+        {
+            printf("%i ", locked[i][j]);
+            if (j == candidate_count - 1)
+            {
+                printf("\n");
+            }
+        }
+    }
+    printf("\n");
+
     // print_winner();
     return 0;
 }
@@ -197,10 +213,40 @@ void sort_pairs(void)
     return;
 }
 
+int isinlosers(int num)
+{
+    for (int i = 0; i < pair_count; i++)
+    {
+        if (pairs[i].loser == num)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int isinwinners(int num)
+{
+    for (int i = 0; i < pair_count; i++)
+    {
+        if (pairs[i].winner == num)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 // Lock pairs into the candidate graph in order, without creating cycles
 void lock_pairs(void)
 {
-    // TODO
+    locked[pairs[0].winner][pairs[0].loser] = true;
+    locked[pairs[1].winner][pairs[1].loser] = true;
+    for (int i = 2; i < pair_count; i++)
+    {
+        // if locked[pairs[i].winner] is not in losers AND locked[pairs[i].loser] is not in winners
+        locked[pairs[i].winner][pairs[i].loser] = true;
+    }
     return;
 }
 
