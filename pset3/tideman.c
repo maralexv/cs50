@@ -30,6 +30,8 @@ bool vote(int rank, string name, int ranks[]);
 void record_preferences(int ranks[]);
 void add_pairs(void);
 void sort_pairs(void);
+int isinlosers(int num);
+int isinwinners(int num);
 void lock_pairs(void);
 void print_winner(void);
 
@@ -122,7 +124,7 @@ int main(int argc, string argv[])
     }
     printf("\n");
 
-    // print_winner();
+    print_winner();
     return 0;
 }
 
@@ -244,15 +246,37 @@ void lock_pairs(void)
     locked[pairs[1].winner][pairs[1].loser] = true;
     for (int i = 2; i < pair_count; i++)
     {
-        // if locked[pairs[i].winner] is not in losers AND locked[pairs[i].loser] is not in winners
-        locked[pairs[i].winner][pairs[i].loser] = true;
+        // If pairs[i].winner is not in locked losers AND pairs[i].loser is no in locked winners
+        if (isinlosers(pairs[i].winner) == 0 && isinwinners(pairs[i].loser) == 0)
+        {
+            locked[pairs[i].winner][pairs[i].loser] = true;
+        }
     }
     return;
+}
+
+int iswinnerinlosers(int winner)
+{
+    for (int j = 0; j < pair_count; j++)
+    {
+        if (locked[j][winner] == 1)
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 // Print the winner of the election
 void print_winner(void)
 {
-    // TODO
+    for (int i = 0; i < pair_count; i++)
+    {
+        // If pair belongs to locked AND winner is not among locked losers
+        if (locked[pairs[i].winner][pairs[i].loser] == 1 && iswinnerinlosers(pairs[i].winner) == 0)
+        {
+            printf("%s\n", candidates[pairs[i].winner]);
+        }
+    }
     return;
 }
