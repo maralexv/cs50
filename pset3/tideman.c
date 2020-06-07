@@ -30,8 +30,6 @@ bool vote(int rank, string name, int ranks[]);
 void record_preferences(int ranks[]);
 void add_pairs(void);
 void sort_pairs(void);
-int isinlosers(int num);
-int isinwinners(int num);
 void lock_pairs(void);
 void print_winner(void);
 
@@ -91,39 +89,9 @@ int main(int argc, string argv[])
         printf("\n");
     }
 
-    // print preferences
-    for (int i = 0; i < candidate_count; i++)
-    {
-        for (int j = 0; j < candidate_count; j++)
-        {
-            printf("%i ", preferences[i][j]);
-            if (j == candidate_count - 1)
-            {
-                printf("\n");
-            }
-        }
-    }
-    printf("\n");
-
     add_pairs();
     sort_pairs();
     lock_pairs();
-
-    // print locked after
-    printf("locked after\n");
-    for (int i = 0; i < candidate_count; i++)
-    {
-        for (int j = 0; j < candidate_count; j++)
-        {
-            printf("%i ", locked[i][j]);
-            if (j == candidate_count - 1)
-            {
-                printf("\n");
-            }
-        }
-    }
-    printf("\n");
-
     print_winner();
     return 0;
 }
@@ -179,13 +147,6 @@ void add_pairs(void)
             }
         }
     }
-    // print pairs
-    printf("%d pairs:\n", pair_count);
-    for (int i=0; i<pair_count; i++)
-    {
-        printf("[%i]w: %d, [%i]l: %d\n", i, pairs[i].winner, i, pairs[i].loser);
-    }
-    printf("\n");
     return;
 }
 
@@ -196,7 +157,7 @@ void sort_pairs(void)
     {
         for (int j = 0; j < pair_count - i - 1; j++)
         {
-            if (preferences[pairs[j].winner][pairs[j].loser] < preferences[pairs[j+1].winner][pairs[j+1].loser])
+            if (preferences[pairs[j].winner][pairs[j].loser] < preferences[pairs[j + 1].winner][pairs[j + 1].loser])
             {
                 // swap if greater is at the rear position
                 pair swapper = pairs[j];
@@ -205,21 +166,15 @@ void sort_pairs(void)
             }
         }
     }
-    // print pairs
-    printf("pairs sorted:\n");
-    for (int i = 0; i < pair_count; i++)
-    {
-        printf("[%i]w: %d, [%i]l: %d\n", i, pairs[i].winner, i, pairs[i].loser);
-    }
-    printf("\n");
     return;
 }
 
-int isinlosers(int num)
+// Check whether winner is among locked losers, return 1 if true, 0 if false
+int iswinnerinlosers(int winner)
 {
-    for (int i = 0; i < pair_count; i++)
+    for (int j = 0; j < pair_count; j++)
     {
-        if (pairs[i].loser == num)
+        if (locked[j][winner] == 1)
         {
             return 1;
         }
@@ -227,11 +182,12 @@ int isinlosers(int num)
     return 0;
 }
 
-int isinwinners(int num)
+// Checvk whether loser is among locked winners, return 1 if true, 0 if false
+int isloserinwinners(int loser)
 {
     for (int i = 0; i < pair_count; i++)
     {
-        if (pairs[i].winner == num)
+        if (locked[loser][i] == 1)
         {
             return 1;
         }
@@ -247,7 +203,7 @@ void lock_pairs(void)
     for (int i = 2; i < pair_count; i++)
     {
         // If pairs[i].winner is not in locked losers AND pairs[i].loser is no in locked winners
-        if (isinlosers(pairs[i].winner) == 0 && isinwinners(pairs[i].loser) == 0)
+        if (isloserinwinners(pairs[i].loser) == 0)
         {
             locked[pairs[i].winner][pairs[i].loser] = true;
         }
@@ -255,28 +211,19 @@ void lock_pairs(void)
     return;
 }
 
-int iswinnerinlosers(int winner)
-{
-    for (int j = 0; j < pair_count; j++)
-    {
-        if (locked[j][winner] == 1)
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
 // Print the winner of the election
 void print_winner(void)
 {
     for (int i = 0; i < pair_count; i++)
     {
-        // If pair belongs to locked AND winner is not among locked losers
+        // If pair belongs to locked AND winner is NOT among locked losers
         if (locked[pairs[i].winner][pairs[i].loser] == 1 && iswinnerinlosers(pairs[i].winner) == 0)
         {
-            printf("%s\n", candidates[pairs[i].winner]);
+            printf("%s", candidates[pairs[i].winner]);
+            printf("\n");
+            return;
         }
     }
+    printf("\n");
     return;
 }
