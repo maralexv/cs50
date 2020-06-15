@@ -3,13 +3,13 @@
 
 int main(void)
 {
-    char answer[64];
+    char *answer;
     int dig;
-    printf("What is your name? ");
-    scanf("%s", answer);
-    printf("Hello, %s!\n", answer);
+    // printf("What is your name? ");
+    // scanf("%s", &answer);
+    // printf("Hello, %s!\n", *answer);
 
-    printf("Characteer: ");
-    scanf("%d", &dig);
-    printf("%c\n", answer[dig]);
+    printf("Character: ");
+    scanf("%i", &dig);
+    printf("%c\n", dig);
 }
