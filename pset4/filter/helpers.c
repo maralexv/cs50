@@ -67,7 +67,7 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 {
     RGBTRIPLE tmp;
     int mid;
-    
+
     if (width % 2 == 0)
     {
         mid = width/2;
