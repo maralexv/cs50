@@ -82,6 +82,7 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     // RGBTRIPLE tmp;
     int mid;
 
+    // Determine the mid pixel depending on whether the width is odd or even
     if (width % 2 == 0)
     {
         mid = width / 2;
@@ -91,8 +92,10 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
         mid = width / 2 + 1;
     }
 
+    // Iterate through all hight 
     for (int h = 0; h < height; ++h)
     {
+        // Iterate through half width and swap left and right pixels
         for (int w = 0; w < mid; ++w)
         {
             swap(&image[h][w], &image[h][width - 1 - w]);
@@ -101,6 +104,7 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     return;
 }
 
+// Swap function - swaps lewft and right pixels
 void swap(RGBTRIPLE *leftpixel, RGBTRIPLE *rightpixel)
 {
     RGBTRIPLE tmp = *leftpixel;
