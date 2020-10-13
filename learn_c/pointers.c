@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 /*
 Here is how we can declare pointers:
 int* p;
@@ -58,6 +56,7 @@ Right: both c and *pc values
 
 */
 
+#include <stdio.h>
 int main()
 {
   int var = 15;
