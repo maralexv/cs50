@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include <stdlib.h>
 
 int main()
 {
@@ -9,12 +10,10 @@ int main()
         return 1;
     }
     fseek(f, 0, SEEK_END);
-    float nb = ftell(f) / 512;
-    printf("%f blocks of 512 bytes\n", nb);
+    printf("size is %ld bytes, 4-byte blocks: %ld.\n", ftell(f), ftell(f) / sizeof(int));
 
     fseek(f, 0, SEEK_SET);
 
-    int c;
     int i = 0;
     while (1)
     {
@@ -22,14 +21,23 @@ int main()
         {
             break;
         }
-        c = fgetc(f);
-
-        if (c == 0xff)
+        int *b = malloc(512);
+        if (b == NULL)
         {
-            printf("i = %d, c = %x, position = %ld.\n", i, c, ftell(f));
+            printf("Error!");
+            return 2;
+        }
+
+        fread(b, 1, 512, f);
+
+        if (b[0] == 0xff)
+        {
+            printf("i = %d, b[0] = %x, position = %ld.\n", i, b[0], ftell(f));
         }
         ++i;
+        free(b);
     }
 
+    fclose(f);
     return 0;
 }
