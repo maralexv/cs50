@@ -41,9 +41,7 @@ int main(int argc, char *argv[])
         }
 
         // Read 512 - byte block into buffer
-        printf("s %ld ", ftell(sourcefile));
         fread(b, 1, 512, sourcefile);
-        printf("%ld\n", ftell(sourcefile));
 
         // Check the header of the block to see whether it is .jpg file header
         if (b[0] == 0xff && 
@@ -64,9 +62,7 @@ int main(int argc, char *argv[])
                     return 3;
                 }
                 // Write b block into new .jpeg file
-                printf("t %ld", ftell(targetfile));
                 fwrite(b, 1, 512, targetfile);
-                printf(" %ld\n", ftell(targetfile));
             }
 
             // If not the 1st jpg header found
@@ -84,9 +80,7 @@ int main(int argc, char *argv[])
                     return 3;
                 }
                 // Write b block into new .jpeg file
-                printf("t %ld", ftell(targetfile));
                 fwrite(b, 1, 512, targetfile);
-                printf(" %ld\n", ftell(targetfile));
             }
         }
 
@@ -94,9 +88,7 @@ int main(int argc, char *argv[])
         if (i > -1)
         {
             // Write b block to the current .jpg file
-            printf("t %ld", ftell(targetfile));
             fwrite(b, 1, 512, targetfile);
-            printf(" %ld\n", ftell(targetfile));
         }
 
     }
