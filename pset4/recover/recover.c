@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
             // If first jpg header found
             if (!y)
             {
+                y = 1; //First image found!
                 // Crete new .jpg file and open for append
                 sprintf(filename, "%03i.jpg", i);
                 targetfile = fopen(filename, "a");
@@ -69,7 +70,6 @@ int main(int argc, char *argv[])
                 // Write b block into new .jpeg file
                 fwrite(b, sizeof(BYTE), 512, targetfile);
                 fclose(targetfile);
-                y = 1;
             }
 
             // If not the 1st jpg header found
@@ -109,13 +109,12 @@ int main(int argc, char *argv[])
         }
 
     } while (ftell(sourcefile) < end);
-    printf("%d\n", i);
 
     // Garbage collection
     // Free dynamically allocated memry
     free(b);
     // Close all open files and exit
-    // fclose(targetfile);
+    fclose(targetfile);
     fclose(sourcefile);
     return 0;
 }
