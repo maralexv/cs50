@@ -1,3 +1,4 @@
+*.DS_Store
 *.[oa]
 *~
 *.bak
@@ -7,6 +8,7 @@
 *.tmp
 # Prerequisites
 *.d
+*.dSYM
 
 # Object files
 *.o

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// Max number of candidates
+// Set max number of candidates
 #define MAX 9
 
 // Candidates have name and vote count
@@ -11,12 +11,10 @@ typedef struct
     string name;
     int votes;
 } candidate;
-
-// Array of candidates
-candidate candidates[MAX];
-
+// Define array of candidates
+candidate CANDIDATES[MAX];
 // Number of candidates
-int candidate_count;
+int CANDIDATE_COUNT;
 
 // Function prototypes
 bool vote(string name);
@@ -30,18 +28,17 @@ int main(int argc, string argv[])
         printf("Usage: plurality [candidate ...]\n");
         return 1;
     }
-
     // Populate array of candidates
-    candidate_count = argc - 1;
-    if (candidate_count > MAX)
+    CANDIDATE_COUNT = argc - 1;
+    if (CANDIDATE_COUNT > MAX)
     {
         printf("Maximum number of candidates is %i\n", MAX);
         return 2;
     }
-    for (int i = 0; i < candidate_count; i++)
+    for (int i = 0; i < CANDIDATE_COUNT; i++)
     {
-        candidates[i].name = argv[i + 1];
-        candidates[i].votes = 0;
+        CANDIDATES[i].name = argv[i + 1];
+        CANDIDATES[i].votes = 0;
     }
 
     int voter_count = get_int("Number of voters: ");
@@ -56,6 +53,7 @@ int main(int argc, string argv[])
         {
             printf("Invalid vote.\n");
         }
+    
     }
 
     // Display winner of election
@@ -65,13 +63,42 @@ int main(int argc, string argv[])
 // Update vote totals given a new vote
 bool vote(string name)
 {
-    // TODO
+    for (int i = 0; i < CANDIDATE_COUNT; i++)
+    {
+        if (strcmp(CANDIDATES[i].name, name) == 0)
+        {
+            CANDIDATES[i].votes++;
+            return true;
+        }
+    }
     return false;
 }
 
 // Print the winner (or winners) of the election
 void print_winner(void)
 {
-    // TODO
+    int k = 0;
+    // Find the highest vote
+    for (int i = 0; i < CANDIDATE_COUNT; i++)
+    {
+        if (CANDIDATES[i].votes > k)
+        {
+            k = CANDIDATES[i].votes;
+        }
+    }
+    // If the highest vote = 0, no votes were casted
+    if (k == 0)
+    {
+        printf("No valid votes casted!\n");
+        return;
+    }
+    // Print all the winners
+    for (int i = 0; i < CANDIDATE_COUNT; i++)
+    {
+        if (CANDIDATES[i].votes == k)
+        {
+            printf("%s\n", CANDIDATES[i].name);
+        }
+    }
     return;
 }

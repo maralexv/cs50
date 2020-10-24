@@ -1,12 +1,15 @@
-// Asking for person's name and greeting the person, using cs50.h too
+// Ask for name and greet the person using only stdio.h
 #include<stdio.h>
-#include<cs50.h>
 
 int main(void)
 {
-    string answer = get_string("What is your name? ");
+    char answer[100];
+    int *dig;
+    printf("What is your name? ");
+    scanf("%s", answer);
     printf("Hello, %s!\n", answer);
 
-    
+    printf("Character: ");
+    scanf("%i", &dig);
+    printf("%c\n", *dig);
 }
-
