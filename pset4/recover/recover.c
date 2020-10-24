@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 typedef uint8_t BYTE;
 
@@ -21,7 +22,7 @@ int main(int argc, char *argv[])
     }
 
     // Initialise variables to be used in while loop
-    int i = 0; // Images counter
+    int i = -1; // Images counter
     int y = 0; // Flag of 1st image fohnd
     char filename[8]; // Image name
     FILE *targetfile = NULL; // Target file to store images
@@ -56,9 +57,8 @@ int main(int argc, char *argv[])
             // If first jpg header found
             if (!y)
             {
-                y = 1; //First image found!
                 // Crete new .jpg file and open for append
-                sprintf(filename, "%03i.jpg", i);
+                sprintf(filename, "%03i.jpg", i++);
                 targetfile = fopen(filename, "a");
                 if (!targetfile)
                 {
@@ -70,6 +70,8 @@ int main(int argc, char *argv[])
                 // Write b block into new .jpeg file
                 fwrite(b, sizeof(BYTE), 512, targetfile);
                 fclose(targetfile);
+                //First image found!
+                y = 1; 
             }
 
             // If not the 1st jpg header found
@@ -116,5 +118,17 @@ int main(int argc, char *argv[])
     // Close all open files and exit
     fclose(targetfile);
     fclose(sourcefile);
+
+    int del = remove("-01.jpg");
+    if (!del)
+    {
+        printf("The file is deleted successfully\n");
+    }
+    else
+    {
+        printf("The file is not found and not deleted\n");
+        return 6;
+    }
+
     return 0;
 }
