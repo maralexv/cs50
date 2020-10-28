@@ -22,13 +22,10 @@ int main(int argc, char *argv[])
     }
 
     // Initialise variables to be used in while loop
-    int i = -1; // Images counter
+    int i = 0; // Images counter
     int y = 0; // Flag of 1st image fohnd
     char filename[8]; // Image name
     FILE *targetfile = NULL; // Target file to store images
-
-    fseek(sourcefile, 0, SEEK_END);
-    unsigned long end = ftell(sourcefile);
     
     // Allocate memry for a buffer
     BYTE *b = malloc(512);
@@ -39,11 +36,15 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    // Find out hoe many blocks of 512 BYTES are on card
+    fseek(sourcefile, 0, SEEK_END);
+    unsigned long q = ftell(sourcefile) / 512;
+
     // Get to the very begining of the file and scan it
     fseek(sourcefile, 0, SEEK_SET);
 
     // Loop through the sourcefile by chuncks of 512 bytes
-    do
+    for (int n = 0; n < q; n++)
     {
         // Read 512 - byte block into buffer
         fread(b, sizeof(BYTE), 512, sourcefile);
@@ -57,19 +58,8 @@ int main(int argc, char *argv[])
             // If first jpg header found
             if (!y)
             {
-                // Crete new .jpg file and open for append
-                sprintf(filename, "%03i.jpg", i++);
-                targetfile = fopen(filename, "a");
-                if (!targetfile)
-                {
-                    fclose(sourcefile);
-                    fclose(targetfile);
-                    printf("Error creating the 1st file!\n");
-                    return 3;
-                }
-                // Write b block into new .jpeg file
-                fwrite(b, sizeof(BYTE), 512, targetfile);
-                fclose(targetfile);
+                // Crete first .jpg file name
+                sprintf(filename, "%03i.jpg", i);
                 //First image found!
                 y = 1; 
             }
@@ -77,26 +67,18 @@ int main(int argc, char *argv[])
             // If not the 1st jpg header found
             else
             {
-                // Create new .jpg file and open for append
-                sprintf(filename, "%03i.jpg", i++);
-                targetfile = fopen(filename, "a");
-                if (!targetfile)
-                {
-                    fclose(sourcefile);
-                    fclose(targetfile);
-                    printf("Error creating new file!\n");
-                    return 4;
-                }
-                // Write b block into new .jpeg file
-                fwrite(b, sizeof(BYTE), 512, targetfile);
-                fclose(targetfile);
+                // Increase image count by 1
+                i++;
+                // Create new .jpg file name
+                sprintf(filename, "%03i.jpg", i);
             }
         }
 
-        // When a target jpg file already exists
+        // If firsdt jpg file has already been found
+        // Write blocks of 512 bytes using current filename
         if (y)
         {
-            sprintf(filename, "%03i.jpg", i);
+            // Create )if does not exist) and open gilename.jpg file 
             targetfile = fopen(filename, "a");
             if (!targetfile)
             {
@@ -105,30 +87,17 @@ int main(int argc, char *argv[])
                 printf("Error openning target file!\n");
                 return 5;
             }
-            // Write b block to the current .jpg file
+            // Write b block to the current filename.jpg file
             fwrite(b, sizeof(BYTE), 512, targetfile);
             fclose(targetfile);
         }
-
-    } while (ftell(sourcefile) < end);
+    }
 
     // Garbage collection
     // Free dynamically allocated memry
     free(b);
-    // Close all open files and exit
+    // Close all files and exit
     fclose(targetfile);
     fclose(sourcefile);
-
-    int del = remove("-01.jpg");
-    if (!del)
-    {
-        printf("The file is deleted successfully\n");
-    }
-    else
-    {
-        printf("The file is not found and not deleted\n");
-        return 6;
-    }
-
     return 0;
 }
